@@ -1,3 +1,8 @@
+const FINAL_SCORE = 5;
+/**
+ * Randomly generate a computer choice
+ * @returns random choice
+ */
 function getComputerChoice() {
   let randomNumber = Math.floor(Math.random() * 3);
   switch (randomNumber) {
@@ -33,6 +38,7 @@ function playRound(playerSelection, computerSelection) {
   }
 }
 
+// Console based version
 function playGame() {
   const rounds = 5;
 
@@ -58,4 +64,55 @@ function playGame() {
   }
 }
 
-playGame();
+function playGameUI(playerSelection) {
+  // Display the outcome
+  let outcome = playRound(playerSelection, getComputerChoice());
+  console.log(outcome);
+  let outcomeElement = document.querySelector("#outcome");
+
+  outcomeElement.textContent = outcome;
+
+  // Compute score
+  let scoreElement;
+  let computerScore = document.querySelector("#computerScore");
+  let playerScore = document.querySelector("#playerScore");
+
+  if (outcome.includes("lost")) {
+    scoreElement = computerScore;
+  } else if (outcome.includes("won")) {
+    scoreElement = playerScore;
+  } else {
+    return; // Nothing to do if tie
+  }
+
+  scoreElement.textContent++;
+
+  // Check if game is over
+  // Game continues after winner is decided, this is intentional
+  if (scoreElement.textContent == FINAL_SCORE) {
+    let resultElement = document.querySelector("#result");
+    if (parseInt(playerScore) > parseInt(computerScore)) {
+      resultElement.textContent = "YOU HAVE WON!";
+    } else {
+      resultElement.textContent = "YOU HAVE LOST!";
+    }
+  }
+}
+
+//playGame();
+
+// Get player selection from buttons
+let rockButton = document.querySelector("#rock");
+rockButton.addEventListener("click", function (e) {
+  playGameUI("rock");
+});
+
+let paperButton = document.querySelector("#paper");
+paperButton.addEventListener("click", function (e) {
+  playGameUI("paper");
+});
+
+let scissorsButton = document.querySelector("#scissors");
+scissorsButton.addEventListener("click", function (e) {
+  playGameUI("scissors");
+});
